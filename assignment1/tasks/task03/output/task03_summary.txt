@@ -1,0 +1,13 @@
+Task 03 ciphers/modes used:
+-aes-128-ecb
+-aes-128-cbc
+
+Input and output file sizes (bytes):
+  184974 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/../../assignment1-supplymentary/pic_original.bmp
+  184982 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/output/provided_ecb.bmp
+  184982 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/output/provided_cbc.bmp
+  554938 total
+  196662 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/output/own_picture.bmp
+  196678 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/output/own_ecb.bmp
+  196678 /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task03/output/own_cbc.bmp
+  590018 total

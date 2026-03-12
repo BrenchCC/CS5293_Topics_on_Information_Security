@@ -1,0 +1,5 @@
+Prediction before running the experiment (1-bit error at ciphertext byte #55):
+- ECB: one full plaintext block (block containing byte #55) becomes garbled; others unaffected.
+- CBC: current block becomes garbled, and the same bit position flips in the next block; others unaffected.
+- CFB (128-bit segment): same bit flips in current block, next block becomes garbled, then recovery.
+- OFB: only the corresponding plaintext bit flips; no propagation beyond that bit.

@@ -1,0 +1,5 @@
+Mode padding size check (input length =       21 bytes):
+ecb:       32 bytes
+cbc:       32 bytes
+cfb:       21 bytes
+ofb:       21 bytes

@@ -1,0 +1,5 @@
+Task 6.2 OFB recovery
+Given P1: This is a known message!
+Recovered P2 hex  : 4f726465723a204c61756e63682061206d697373696c6521
+Recovered P2 text : Order: Launch a missile!
+CFB answer: with IV reuse, only the first plaintext block of P2 can be directly revealed from known P1/C1/C2 context; later blocks depend on unknown E_K(C2_{i-1}).
