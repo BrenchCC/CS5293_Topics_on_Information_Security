@@ -1,0 +1,6 @@
+non64_prefix_len=27
+len64_prefix_len=64
+out1_non64_size=192
+out2_non64_size=192
+out1_64_size=192
+out2_64_size=192
