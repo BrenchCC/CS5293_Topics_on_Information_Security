@@ -1,0 +1,4 @@
+CBC encrypted file sizes:
+f5.cbc.enc:       16 bytes
+f10.cbc.enc:       16 bytes
+f16.cbc.enc:       32 bytes

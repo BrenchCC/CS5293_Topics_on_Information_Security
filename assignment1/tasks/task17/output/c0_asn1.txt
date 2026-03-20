@@ -1,0 +1,104 @@
+    0:d=0  hl=4 l=1800 cons: SEQUENCE          
+    4:d=1  hl=4 l=1520 cons:  SEQUENCE          
+    8:d=2  hl=2 l=   3 cons:   cont [ 0 ]        
+   10:d=3  hl=2 l=   1 prim:    INTEGER           :02
+   13:d=2  hl=2 l=  16 prim:   INTEGER           :01BA36D85D79F704DF4E5653B6BB63ED
+   31:d=2  hl=2 l=  13 cons:   SEQUENCE          
+   33:d=3  hl=2 l=   9 prim:    OBJECT            :sha256WithRSAEncryption
+   44:d=3  hl=2 l=   0 prim:    NULL              
+   46:d=2  hl=2 l=  68 cons:   SEQUENCE          
+   48:d=3  hl=2 l=  11 cons:    SET               
+   50:d=4  hl=2 l=   9 cons:     SEQUENCE          
+   52:d=5  hl=2 l=   3 prim:      OBJECT            :countryName
+   57:d=5  hl=2 l=   2 prim:      PRINTABLESTRING   :US
+   61:d=3  hl=2 l=  21 cons:    SET               
+   63:d=4  hl=2 l=  19 cons:     SEQUENCE          
+   65:d=5  hl=2 l=   3 prim:      OBJECT            :organizationName
+   70:d=5  hl=2 l=  12 prim:      PRINTABLESTRING   :DigiCert Inc
+   84:d=3  hl=2 l=  30 cons:    SET               
+   86:d=4  hl=2 l=  28 cons:     SEQUENCE          
+   88:d=5  hl=2 l=   3 prim:      OBJECT            :commonName
+   93:d=5  hl=2 l=  21 prim:      PRINTABLESTRING   :DigiCert EV RSA CA G2
+  116:d=2  hl=2 l=  30 cons:   SEQUENCE          
+  118:d=3  hl=2 l=  13 prim:    UTCTIME           :251229000000Z
+  133:d=3  hl=2 l=  13 prim:    UTCTIME           :270105235959Z
+  148:d=2  hl=3 l= 202 cons:   SEQUENCE          
+  151:d=3  hl=2 l=  19 cons:    SET               
+  153:d=4  hl=2 l=  17 cons:     SEQUENCE          
+  155:d=5  hl=2 l=  11 prim:      OBJECT            :jurisdictionCountryName
+  168:d=5  hl=2 l=   2 prim:      PRINTABLESTRING   :US
+  172:d=3  hl=2 l=  25 cons:    SET               
+  174:d=4  hl=2 l=  23 cons:     SEQUENCE          
+  176:d=5  hl=2 l=  11 prim:      OBJECT            :jurisdictionStateOrProvinceName
+  189:d=5  hl=2 l=   8 prim:      PRINTABLESTRING   :Delaware
+  199:d=3  hl=2 l=  29 cons:    SET               
+  201:d=4  hl=2 l=  27 cons:     SEQUENCE          
+  203:d=5  hl=2 l=   3 prim:      OBJECT            :businessCategory
+  208:d=5  hl=2 l=  20 prim:      UTF8STRING        :Private Organization
+  230:d=3  hl=2 l=  15 cons:    SET               
+  232:d=4  hl=2 l=  13 cons:     SEQUENCE          
+  234:d=5  hl=2 l=   3 prim:      OBJECT            :serialNumber
+  239:d=5  hl=2 l=   6 prim:      PRINTABLESTRING   :691011
+  247:d=3  hl=2 l=  11 cons:    SET               
+  249:d=4  hl=2 l=   9 cons:     SEQUENCE          
+  251:d=5  hl=2 l=   3 prim:      OBJECT            :countryName
+  256:d=5  hl=2 l=   2 prim:      PRINTABLESTRING   :US
+  260:d=3  hl=2 l=  17 cons:    SET               
+  262:d=4  hl=2 l=  15 cons:     SEQUENCE          
+  264:d=5  hl=2 l=   3 prim:      OBJECT            :stateOrProvinceName
+  269:d=5  hl=2 l=   8 prim:      PRINTABLESTRING   :New York
+  279:d=3  hl=2 l=  17 cons:    SET               
+  281:d=4  hl=2 l=  15 cons:     SEQUENCE          
+  283:d=5  hl=2 l=   3 prim:      OBJECT            :localityName
+  288:d=5  hl=2 l=   8 prim:      PRINTABLESTRING   :New York
+  298:d=3  hl=2 l=  29 cons:    SET               
+  300:d=4  hl=2 l=  27 cons:     SEQUENCE          
+  302:d=5  hl=2 l=   3 prim:      OBJECT            :organizationName
+  307:d=5  hl=2 l=  20 prim:      UTF8STRING        :JPMorgan Chase & Co.
+  329:d=3  hl=2 l=  22 cons:    SET               
+  331:d=4  hl=2 l=  20 cons:     SEQUENCE          
+  333:d=5  hl=2 l=   3 prim:      OBJECT            :commonName
+  338:d=5  hl=2 l=  13 prim:      PRINTABLESTRING   :www.chase.com
+  353:d=2  hl=4 l= 290 cons:   SEQUENCE          
+  357:d=3  hl=2 l=  13 cons:    SEQUENCE          
+  359:d=4  hl=2 l=   9 prim:     OBJECT            :rsaEncryption
+  370:d=4  hl=2 l=   0 prim:     NULL              
+  372:d=3  hl=4 l= 271 prim:    BIT STRING        
+  647:d=2  hl=4 l= 877 cons:   cont [ 3 ]        
+  651:d=3  hl=4 l= 873 cons:    SEQUENCE          
+  655:d=4  hl=2 l=  31 cons:     SEQUENCE          
+  657:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Authority Key Identifier
+  662:d=5  hl=2 l=  24 prim:      OCTET STRING      [HEX DUMP]:301680146A4E50BF98689D5B7B2075D45901794866923206
+  688:d=4  hl=2 l=  29 cons:     SEQUENCE          
+  690:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Subject Key Identifier
+  695:d=5  hl=2 l=  22 prim:      OCTET STRING      [HEX DUMP]:0414B92E0BAC1CEEA804795D3FD60190691505B02BEC
+  719:d=4  hl=2 l=  40 cons:     SEQUENCE          
+  721:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Subject Alternative Name
+  726:d=5  hl=2 l=  33 prim:      OCTET STRING      [HEX DUMP]:301F820D7777772E63686173652E636F6D820E626574612E63686173652E636F6D
+  761:d=4  hl=2 l=  74 cons:     SEQUENCE          
+  763:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Certificate Policies
+  768:d=5  hl=2 l=  67 prim:      OCTET STRING      [HEX DUMP]:3041300B06096086480186FD6C02013032060567810C01013029302706082B06010505070201161B687474703A2F2F7777772E64696769636572742E636F6D2F435053
+  837:d=4  hl=2 l=  14 cons:     SEQUENCE          
+  839:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Key Usage
+  844:d=5  hl=2 l=   1 prim:      BOOLEAN           :255
+  847:d=5  hl=2 l=   4 prim:      OCTET STRING      [HEX DUMP]:030205A0
+  853:d=4  hl=2 l=  29 cons:     SEQUENCE          
+  855:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Extended Key Usage
+  860:d=5  hl=2 l=  22 prim:      OCTET STRING      [HEX DUMP]:301406082B0601050507030106082B06010505070302
+  884:d=4  hl=2 l= 117 cons:     SEQUENCE          
+  886:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 CRL Distribution Points
+  891:d=5  hl=2 l= 110 prim:      OCTET STRING      [HEX DUMP]:306C3034A032A030862E687474703A2F2F63726C332E64696769636572742E636F6D2F44696769436572744556525341434147322E63726C3034A032A030862E687474703A2F2F63726C342E64696769636572742E636F6D2F44696769436572744556525341434147322E63726C
+ 1003:d=4  hl=2 l= 115 cons:     SEQUENCE          
+ 1005:d=5  hl=2 l=   8 prim:      OBJECT            :Authority Information Access
+ 1015:d=5  hl=2 l= 103 prim:      OCTET STRING      [HEX DUMP]:3065302406082B060105050730018618687474703A2F2F6F6373702E64696769636572742E636F6D303D06082B060105050730028631687474703A2F2F636163657274732E64696769636572742E636F6D2F44696769436572744556525341434147322E637274
+ 1120:d=4  hl=2 l=  12 cons:     SEQUENCE          
+ 1122:d=5  hl=2 l=   3 prim:      OBJECT            :X509v3 Basic Constraints
+ 1127:d=5  hl=2 l=   1 prim:      BOOLEAN           :255
+ 1130:d=5  hl=2 l=   2 prim:      OCTET STRING      [HEX DUMP]:3000
+ 1134:d=4  hl=4 l= 390 cons:     SEQUENCE          
+ 1138:d=5  hl=2 l=  10 prim:      OBJECT            :CT Precertificate SCTs
+ 1150:d=5  hl=4 l= 374 prim:      OCTET STRING      [HEX DUMP]:0482017201700076004C63DC98E59C1DAB88F61E8A3DDEAE8FAB44A3377B5F9B94C3FBA19CFCC1BE260000019B6777416B0000040300473045022072337C5FF303E546709C3AD6D7BE64CEBC6D08C985F2E5961C7D9DC3DFC6C0DF022100C1AC792745FCC8810AAA2FF36A9EB4A039BF3A06FD4BBDD2D612DE701942E88E0077001C9F682CE9FAF0456950F81B968A87DDDB3210D84CE6C8B2E382524AC4CF599F0000019B6777416C0000040300483046022100C3BADE63FD238894E1067807BAD1DCC6AD57235E03F66E0DB7C75D1DD11833FE02210097B97E67402D9FBD9146DCD7F126FB78EB3BCF56F15C93DBDC3635CB2E983979007D00A2810018734E176E1D47E09540F381BA546697CD63A84350716EB8094EDAF10D0000019B677741DE00080000050000D65F5E04030046304402202C6E6A6B09575A7358C180F0869A4C8A3AC81A2968D969DD4A56EC844760B39A0220056EBF21DC5F8A7D8764B0D137664649AC0B1A43AE76DDBECB30551A26C20581
+ 1528:d=1  hl=2 l=  13 cons:  SEQUENCE          
+ 1530:d=2  hl=2 l=   9 prim:   OBJECT            :sha256WithRSAEncryption
+ 1541:d=2  hl=2 l=   0 prim:   NULL              
+ 1543:d=1  hl=4 l= 257 prim:  BIT STRING        

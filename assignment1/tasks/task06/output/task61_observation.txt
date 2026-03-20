@@ -1,0 +1,6 @@
+Task 6.1 first-block ciphertext snippets (CBC):
+IV1 first run : c40201ad66afcc48f86c14bbb9d9d4d8
+IV2 run       : 74112c76433b7e6847bb4d62f5071807
+IV1 second run: c40201ad66afcc48f86c14bbb9d9d4d8
+IV1 first run == IV1 second run ? yes
+IV1 first run == IV2 run ? no

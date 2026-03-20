@@ -1,0 +1,4 @@
+/proc/sys/kernel/random/entropy_avail is unavailable on this system (non-Linux).
+Fallback observation: measured read time instead of entropy counter.
+Read 64KB from /dev/random duration_seconds=0
+Read 64KB from /dev/urandom duration_seconds=0

@@ -1,0 +1,7 @@
+entropy_counter_available=no
+Duration_seconds=8
+Final_bytes_from_dev_random=1048576
+Blocked_or_slow=yes_if_process_still_running_after_8s=no
+
+Monitor log: task21_monitor.txt
+DoS note: Repeatedly forcing a server to draw session keys from /dev/random can deplete entropy and make key generation block, delaying or denying client service.

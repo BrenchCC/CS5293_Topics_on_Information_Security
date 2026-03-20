@@ -1,0 +1,4 @@
+Recovered dictionary word key: Syracuse
+Padded 128-bit key (ASCII): Syracuse########
+Padded 128-bit key (hex): 53797261637573652323232323232323
+Decrypted plaintext: This is a top secret.

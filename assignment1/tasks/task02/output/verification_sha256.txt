@@ -1,0 +1,12 @@
+=== -aes-128-cbc ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/../../assignment1-supplymentary/words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/output/words_aes-128-cbc.dec.txt
+
+=== -aes-128-cfb ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/../../assignment1-supplymentary/words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/output/words_aes-128-cfb.dec.txt
+
+=== -aes-128-ofb ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/../../assignment1-supplymentary/words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task02/output/words_aes-128-ofb.dec.txt
+

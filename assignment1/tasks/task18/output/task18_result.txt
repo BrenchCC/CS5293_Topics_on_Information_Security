@@ -1,0 +1,14 @@
+[Run A: with srand(time(NULL))]
+time(NULL) = 1773776652
+mode = with_srand_time
+0e4db2e7be1491f84ccf17f5c15a2cff
+
+[Run B: without srand line]
+time(NULL) = 1773776653
+mode = without_srand
+a7f1d92a82c8d8fe434d98558ce2b347
+
+[Run C: without srand line again]
+time(NULL) = 1773776653
+mode = without_srand
+a7f1d92a82c8d8fe434d98558ce2b347

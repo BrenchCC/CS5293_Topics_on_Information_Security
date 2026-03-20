@@ -1,0 +1,11 @@
+array_offset=32768
+shift_within_array=0
+region_start=32768
+region_end=32895
+region_len=128
+prefix_len=32768
+prefix_len_mod_64=0
+suffix_start_1based=32897
+base_size=49976
+prog1_size=49976
+prog2_size=49976

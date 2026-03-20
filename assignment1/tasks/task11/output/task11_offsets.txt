@@ -1,0 +1,12 @@
+x_offset=32768
+y_offset=32968
+region1_start=32768
+region2_start=32968
+region_len=128
+prefix_len=32768
+prefix_len_mod_64=0
+middle_len=72
+suffix_skip=33096
+base_size=50040
+benign_size=50040
+malicious_size=50040

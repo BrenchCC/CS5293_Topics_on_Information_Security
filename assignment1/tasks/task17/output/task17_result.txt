@@ -1,0 +1,17 @@
+Website: www.chase.com
+Certificate files: c0.pem (leaf), c1.pem (issuer), c2.pem (root/intermediate)
+
+Issuer modulus (n) head:
+AD1E66CC7F9DE4EB7F8317273D11D9F2532037CDF00C1402EEE1CB8808D2FA7B...
+Issuer exponent (e):
+010001
+
+Signature hex head:
+21BAEAC73FEF7BB56686F0892BCB1C4BE039CDCC0992FE7EA4A551C804ACDA72...
+
+SHA256(c0_body.bin):
+fed86a76b2c2ee63554f6a9f0e51393df90caa75fe5ee3c21b35c5c6b8057fde  /Users/brench/brench_project_collections/School_Project/CS5293_Topics_on_Information_Security/assignment1/tasks/task17/output/c0_body.bin
+
+Program verification output:
+SHA256(c0_body.bin) = FED86A76B2C2EE63554F6A9F0E51393DF90CAA75FE5EE3C21B35C5C6B8057FDE
+PKCS#1 v1.5 digest check = VALID

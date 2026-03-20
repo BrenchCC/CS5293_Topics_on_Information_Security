@@ -1,0 +1,24 @@
+Task 02 Decryption Verification Snapshot
+
+Cipher options tested:
+- -aes-128-cbc
+- -aes-128-cfb
+- -aes-128-ofb
+
+sha256 check (original vs decrypted):
+=== -aes-128-cbc ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words_aes-128-cbc.dec.txt
+
+=== -aes-128-cfb ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words_aes-128-cfb.dec.txt
+
+=== -aes-128-ofb ===
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words.txt
+4396043f66599ce827f6a5a90e8d823d409223f15a6f8a1bde9d3ddd145b2c7e  words_aes-128-ofb.dec.txt
+
+diff check:
+- -aes-128-cbc: identical
+- -aes-128-cfb: identical
+- -aes-128-ofb: identical

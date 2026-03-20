@@ -1,0 +1,7 @@
+Task 6.3 predictable-IV chosen-plaintext attack
+Target C1               : bef65565572ccee2a9f9553154ed9498
+Chosen P2 (Yes-test) hex: 5965730d0d0d0d0d0d0d0d0d0d0d0d0c
+Oracle C2 for Yes-test  : bef65565572ccee2a9f9553154ed9498
+Chosen P2 (No-test) hex : 4e6f0e0e0e0e0e0e0e0e0e0e0e0e0e0f
+Oracle C2 for No-test   : d0680746008a9e91d756e1301d209243
+Inference               : P1 is Yes

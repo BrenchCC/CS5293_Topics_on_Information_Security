@@ -1,0 +1,5 @@
+M_size=192
+N_size=192
+T_size=69
+M_plus_T_size=261
+N_plus_T_size=261

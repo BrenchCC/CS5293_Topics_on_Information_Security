@@ -1,0 +1,9 @@
+[Monitoring /dev/random read process for 8 seconds]
+t=1s size_bytes=510124 entropy=N/A dd_alive=yes
+t=2s size_bytes=1023354 entropy=N/A dd_alive=yes
+t=3s size_bytes=1048576 entropy=N/A dd_alive=no
+t=4s size_bytes=1048576 entropy=N/A dd_alive=no
+t=5s size_bytes=1048576 entropy=N/A dd_alive=no
+t=6s size_bytes=1048576 entropy=N/A dd_alive=no
+t=7s size_bytes=1048576 entropy=N/A dd_alive=no
+t=8s size_bytes=1048576 entropy=N/A dd_alive=no
