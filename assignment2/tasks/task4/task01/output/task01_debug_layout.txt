@@ -1,8 +1,0 @@
-shell=0x40800f09
-buffer=0x40800cca
-saved_ebp=0x40800ce8
-ret_slot=0x40800cec
-arg_slot=0x40800cf0
-ret_offset=34
-arg_offset=38
-Returned Properly

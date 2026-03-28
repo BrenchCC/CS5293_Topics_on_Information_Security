@@ -1,3 +1,0 @@
-shell=0x40800f34
-qemu: uncaught target signal 11 (Segmentation fault) - core dumped
-Segmentation fault

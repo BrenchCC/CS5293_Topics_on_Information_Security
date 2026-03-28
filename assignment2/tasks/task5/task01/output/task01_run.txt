@@ -1,2 +1,0 @@
-The variable secret's address is 0x40800d38 (on stack)
-qemu: uncaught target signal 11 (Segmentation fault) - core dumped

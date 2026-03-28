@@ -1,2 +1,0 @@
-ANY_NAME=seed_magic
-PATH=/tmp/task2_path:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games

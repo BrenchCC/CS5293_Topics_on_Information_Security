@@ -1,1 +1,0 @@
-cat: '/tmp/task25/secret.txt; echo compromised > /tmp/task25/protected.txt': No such file or directory

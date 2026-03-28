@@ -1,9 +1,0 @@
-The variable secret's address is 0x40800d38 (on stack)
-The variable secret's value is 0x40804040 (on heap)
-secret[0]'s address is 0x40804040 (on heap)
-secret[1]'s address is 0x40804044 (on heap)
-Please enter a decimal integer
-Please enter a string
-MARK.40800d3c.40800eff.0.0.0.0.0.0.40804040.40804044.40804044.40804040.40804044.40804044.40804040.0.0.0.0.0.55667788.40804040.4b52414d.2e78252e.252e7825.78252e78
-The original secrets: 0x44 -- 0x55
-The new secrets: 0x44 -- 0x55
