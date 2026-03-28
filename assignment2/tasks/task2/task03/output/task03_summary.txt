@@ -1,0 +1,11 @@
+Task 03: PATH attack against system() in a setuid program
+
+Default /bin/sh -> dash
+This is my ls program
+My real uid is: 1000
+My effective uid is: 1000
+
+Countermeasure disabled via privileged shell wrapper
+This is my ls program
+My real uid is: 1000
+My effective uid is: 0

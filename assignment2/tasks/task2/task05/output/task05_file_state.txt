@@ -1,0 +1,5 @@
+protected.txt contents:
+compromised
+
+secret.txt contents:
+TOP SECRET

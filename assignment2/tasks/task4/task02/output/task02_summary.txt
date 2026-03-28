@@ -1,0 +1,50 @@
+Task 4.6 Summary
+================
+
+ASLR setting inside the Linux i386 container:
+$ cat /proc/sys/kernel/randomize_va_space
+2
+
+Repeated helper runs as root:
+$ for i in 1 2 3 4 5; do ./output/env666; done
+0x40800f0d
+0x40800f0d
+0x40800f0d
+0x40800f0d
+0x40800f0d
+
+Repeated helper runs as seed:
+$ for i in 1 2 3 4 5; do su seed -c 'env MYSHELL=/bin/sh ./output/env666'; done
+0x40800f3a
+0x40800f3a
+0x40800f3a
+0x40800f3a
+0x40800f3a
+
+Repeated exploit launches:
+$ for i in 1 2 3 4 5; do printf "id\\nwhoami\\nexit\\n" | ./output/retlib; done
+run=1
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+run=2
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+run=3
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+run=4
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+run=5
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+
+Conclusion:
+The kernel reported ASLR enabled, but the critical helper addresses did not change across runs.
+Therefore the expected address-randomization effect was not observable in this emulated runtime,
+even though ASLR would normally make a return-to-libc payload much harder on native Linux.

@@ -1,0 +1,2 @@
+uid=1000(seed) gid=1000(seed) groups=1000(seed)
+seed

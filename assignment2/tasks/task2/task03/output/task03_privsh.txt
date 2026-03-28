@@ -1,0 +1,3 @@
+This is my ls program
+My real uid is: 1000
+My effective uid is: 0

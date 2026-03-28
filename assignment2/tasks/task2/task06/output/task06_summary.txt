@@ -1,0 +1,8 @@
+Task 06: Capability leaking
+
+Before running the setuid program
+Original line
+
+After running the setuid program
+Original line
+Malicious Data

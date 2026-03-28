@@ -1,0 +1,10 @@
+Experiment design:
+1. Run the normal binary as seed with LD_PRELOAD pointing to libmylib.so.1.0.1.
+2. Change ownership to root and enable the setuid bit, then run it again as seed.
+3. Keep the binary as setuid-root and execute it directly as root.
+4. Change ownership to user1, keep the setuid bit, and execute it as seed.
+
+Observed cause:
+- LD_PRELOAD is honored when there is no privilege transition.
+- The dynamic loader strips LD_PRELOAD in secure-execution mode when the real and effective UIDs differ.
+- The root-run case preserves both UIDs as 0, so LD_PRELOAD is active again.

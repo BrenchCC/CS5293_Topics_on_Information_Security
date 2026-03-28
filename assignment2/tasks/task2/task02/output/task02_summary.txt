@@ -1,0 +1,7 @@
+Task 02: Environment variable inheritance in setuid child
+
+Selected output from setuidenv:
+ANY_NAME=seed_magic
+PATH=/tmp/task2_path:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+Observation: LD_LIBRARY_PATH is absent from the setuid child output, while PATH and ANY_NAME are inherited.

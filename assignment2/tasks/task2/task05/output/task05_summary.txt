@@ -1,0 +1,14 @@
+Task 05: system() versus execve()
+
+System() attack output
+TOP SECRET
+
+Execve() attack output
+cat: '/tmp/task25/secret.txt; echo compromised > /tmp/task25/protected.txt': No such file or directory
+
+File state after both runs
+protected.txt contents:
+compromised
+
+secret.txt contents:
+TOP SECRET

@@ -1,0 +1,33 @@
+Toolchain observation for Stack Guard:
+- zig x86-linux-musl did not emit a canary check in bof(), even with -fstack-protector-all.
+- zig x86-linux-gnu did emit a canary check in bof(), but this runtime path could not be executed in the container because 32-bit glibc was unavailable.
+
+Disassembly excerpt from the x86-linux-gnu build:
+000228e0 <bof>:
+   228e0: 55                           	pushl	%ebp
+   228e1: 89 e5                        	movl	%esp, %ebp
+   228e3: 53                           	pushl	%ebx
+   228e4: 83 ec 34                     	subl	$0x34, %esp
+   228e7: e8 00 00 00 00               	calll	0x228ec <bof+0xc>
+   228ec: 58                           	popl	%eax
+   228ed: 81 c0 38 29 06 00            	addl	$0x62938, %eax          # imm = 0x62938
+   228f3: 89 45 d8                     	movl	%eax, -0x28(%ebp)
+   228f6: 8b 45 08                     	movl	0x8(%ebp), %eax
+   228f9: 65 a1 14 00 00 00            	movl	%gs:0x14, %eax
+   228ff: 89 45 f8                     	movl	%eax, -0x8(%ebp)
+   22902: 8d 45 e0                     	leal	-0x20(%ebp), %eax
+   22905: 89 45 dc                     	movl	%eax, -0x24(%ebp)
+   22908: 83 f8 00                     	cmpl	$0x0, %eax
+   2290b: 75 11                        	jne	0x2291e <bof+0x3e>
+   2290d: 8b 5d d8                     	movl	-0x28(%ebp), %ebx
+   22910: 8d 83 9c 10 00 00            	leal	0x109c(%ebx), %eax
+   22916: 89 04 24                     	movl	%eax, (%esp)
+   22919: e8 62 26 00 00               	calll	0x24f80 <__ubsan_handle_nonnull_arg>
+   2291e: 8b 45 08                     	movl	0x8(%ebp), %eax
+   22921: 89 45 d4                     	movl	%eax, -0x2c(%ebp)
+   22924: 83 f8 00                     	cmpl	$0x0, %eax
+   22927: 75 11                        	jne	0x2293a <bof+0x5a>
+   22929: 8b 5d d8                     	movl	-0x28(%ebp), %ebx
+   2292c: 8d 83 bc 10 00 00            	leal	0x10bc(%ebx), %eax
+   22932: 89 04 24                     	movl	%eax, (%esp)
+   22935: e8 46 26 00 00               	calll	0x24f80 <__ubsan_handle_nonnull_arg>

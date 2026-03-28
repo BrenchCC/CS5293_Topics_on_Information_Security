@@ -1,0 +1,4 @@
+$ ./exploit_arg 0x40800b6f 28
+$ printf "id\nwhoami\nexit\n" | ./stack_noexec
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault

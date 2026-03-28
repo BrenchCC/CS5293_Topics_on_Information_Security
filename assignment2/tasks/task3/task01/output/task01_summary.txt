@@ -1,0 +1,7 @@
+$ zig cc -target x86-linux-musl call_shellcode.c -o call_shellcode
+$ perl patch_execstack.pl call_shellcode
+$ printf "whoami\nexit\n" | ./call_shellcode
+seed
+
+Observation:
+The shellcode successfully invoked /bin/sh and accepted commands from stdin.

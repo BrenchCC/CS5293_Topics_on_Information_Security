@@ -1,0 +1,17 @@
+SHELL=/usr/bin/bash
+HOST_UID=501
+PYTHON_SHA256=8d3ed8ec5c88c1c95f5e558612a725450d2452813ddad5e58fdb1a53b1209b78
+ANY_NAME=seed_magic
+HOSTNAME=3182a71b43ab
+PYTHON_VERSION=3.11.14
+PWD=/workspace
+LOGNAME=seed
+HOME=/home/seed
+LANG=C.UTF-8
+GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D
+USER=seed
+SHLVL=1
+HOST_GID=20
+PATH=/tmp/task2_path:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+MAIL=/var/mail/seed
+_=/tmp/task02/setuidenv

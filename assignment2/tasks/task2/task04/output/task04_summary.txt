@@ -1,0 +1,13 @@
+Task 04: LD_PRELOAD under four execution conditions
+
+Case 1: regular program run by seed
+I am not sleeping!
+
+Case 2: setuid-root program run by seed
+[no output]
+
+Case 3: setuid-root program run by root
+I am not sleeping!
+
+Case 4: setuid-user1 program run by seed
+[no output]

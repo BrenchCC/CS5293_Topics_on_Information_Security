@@ -1,0 +1,38 @@
+Task 4.7 Summary
+================
+
+Protected build command:
+$ zig cc -target x86-linux-musl assignment2/tasks/task4/task01/retlib.c \
+    -o assignment2/tasks/task4/task03/output/retlib_stackguard \
+    -DBUFSIZE=22 -fstack-protector-all -no-pie -z noexecstack
+
+String evidence from the protected binary:
+$ strings -a retlib_stackguard | rg 'stack_chk'
+__stack_chk_guard
+__stack_chk_fail
+__stack_chk_fail_local
+
+Relevant disassembly excerpt from bof():
+$ objdump -d retlib_stackguard | sed -n '43,75p'
+00019d50 <bof>:
+   19d50: 55                            pushl   %ebp
+   19d51: 89 e5                         movl    %esp, %ebp
+   19d53: 83 ec 38                      subl    $0x38, %esp
+   19d59: 65 a1 14 00 00 00             movl    %gs:0x14, %eax
+   19d5f: 89 45 fc                      movl    %eax, -0x4(%ebp)
+   ...
+   19dac: 65 a1 14 00 00 00             movl    %gs:0x14, %eax
+   19db2: 8b 4d fc                      movl    -0x4(%ebp), %ecx
+   19db5: 39 c8                         cmpl    %ecx, %eax
+   19db7: 75 08                         jne     0x19dc1 <bof+0x71>
+   19dc1: e8 fd 04 00 00                calll   0x1a2c3 <__stack_chk_fail_local>
+
+Runtime test with the same malicious badfile:
+$ printf "id\\nwhoami\\nexit\\n" | ./retlib_stackguard
+qemu: uncaught target signal 11 (Segmentation fault) - core dumped
+Segmentation fault
+
+Conclusion:
+The protected binary clearly contains a stack canary and a failure path through
+__stack_chk_fail_local. In a native runtime, overwriting the return address would also
+corrupt the canary and terminate the process before it could jump to system().

@@ -1,0 +1,6 @@
+str=0x40800b6f
+dummy=0x40800b50
+buffer=0x40800b1c
+ret_addr_slot=0x40800b3c
+offset=32
+Returned Properly
